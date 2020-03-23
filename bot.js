@@ -2,13 +2,15 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler } = require('botbuilder');
+const { crypto } = require('crypto');
 
 class EchoBot extends ActivityHandler {
     constructor() {
         super();
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
-            await context.sendActivity(`You said '${ queryVendorInfo(context) }'`);
+            //await context.sendActivity(`You said '${ queryVendorInfo(context) }'`);
+            await this.queryVendorInfo(context);
 
             // By calling next() you ensure that the next BotHandler is run.
             await next();
@@ -25,58 +27,49 @@ class EchoBot extends ActivityHandler {
             await next();
         });
     }
+    
+    async queryVendorInfo(context) {
+        let vend_name_pp = context.activity.text;
+        
+        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
+        
+        return requestRemoteByGetUser(path, user).then(function(result){
+            let items=JSON.parse(result);
+                    
+            if(!items.hasOwnProperty('message')){
+                return 'I am sorry, I cannot find any related information. ';
+            }
+            if(!items.message.hasOwnProperty('data')){
+                return 'I am sorry, I cannot find any related information. ';
+            }
+            if(!items.message.data.hasOwnProperty('content')){
+                return 'I am sorry, I cannot find any related information. ';
+            }
+
+            var array = [];
+            if(!(items.message.data.content instanceof Array)){
+                array.push(items.message.data.content);
+            }else{
+                array = items.message.data.content;
+            }
+            
+            var resultvendor = 'Vendor Information: ' + '  \n\t\r';
+            for(var pos=0; pos < array.length; pos++){
+                resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
+            }
+            
+            if(array.length < 1){
+                resultvendor = resultvendor + 'Not Found';
+            }
+            return resultvendor;
+        }).catch(function(error){
+            return 'I am sorry, I cannot find any related information. ';
+        });	
+    }
 }
-
-
-function queryVendorInfo(agent) {
-	let vend_name_pp = agent.activity.text;
-	console.log('--------------search vend_name:' + vend_name_pp);
-	
-	let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
-	console.log('--------------search Path:' + path);
-	console.log('--------------search User:' + user);
-	
-	return requestRemoteByGetUser(path, user).then(function(result){
-		let items=JSON.parse(result);
-		console.log('--------------Result :' + items.toString());
-		console.log('--------------Result is items PART :' + (items instanceof Array));		
-				
-		if(!items.hasOwnProperty('message')){
-		    return 'I am sorry, I cannot find any related information. ';
-		}
-		if(!items.message.hasOwnProperty('data')){
-		    return 'I am sorry, I cannot find any related information. ';
-		}
-		if(!items.message.data.hasOwnProperty('content')){
-		    return 'I am sorry, I cannot find any related information. ';
-		}
-
-		var array = [];
-		if(!(items.message.data.content instanceof Array)){
-			array.push(items.message.data.content);
-		}else{
-			array = items.message.data.content;
-		}
-		
-		var resultvendor = 'Vendor Information: ' + '  \n\t\r';
-		for(var pos=0; pos < array.length; pos++){
-			resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
-		}
-		
-		if(array.length < 1){
-			resultvendor = resultvendor + 'Not Found';
-		}
-		return resultvendor;
-	}).catch(function(error){
-	  return 'I am sorry, I cannot find any related information. ';
-	});	
-  }
-
   
 function requestRemoteByGetUser(url, user) {
-    console.log('enter Remote Call By GET');
     return new Promise((resolve, reject) => {    
-      var crypto = require('crypto');
       const options = {
         hostname: snxHost,
         port: 443,
@@ -93,10 +86,7 @@ function requestRemoteByGetUser(url, user) {
           body += data;
         });
         res.on('end', () => {
-          console.log("Pure Result is : "+body); 
-          resolve(body);
-          //body = JSON.parse(body);
-          //console.log("Json Result is : "+body);     
+          resolve(body);    
         });
       });
       
