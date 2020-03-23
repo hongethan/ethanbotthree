@@ -54,16 +54,19 @@ class EchoBot extends ActivityHandler {
             path: url,
             method: 'GET'
         };
-        const request = await https.get(options, res => {
+        const request = https.get(options, res => {
             res.setEncoding('utf8');
             let body = '';
             res.on('data', data => {
                 body += data;
+                await context.sendActivity(`Body '${body}'`);
             });
             res.on('end', () => {
                 //resolve(body);   
                 result += body;
+                await context.sendActivity(`Body '${body}'`);
             });
+            await context.sendActivity(`Body '${body}'`);
         });
 
         request.on('error', function (e) {
