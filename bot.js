@@ -40,34 +40,34 @@ class EchoBot extends ActivityHandler {
         let path = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         console.log('--------------search Path:' + path);
         await context.sendActivity(`You said '${ path }'`);
-        let msg = requestRemoteByGetUser(path , 'ethanh');
+        let msg = await requestRemoteByGetUser(path , 'ethanh');
     }
-}
-
-function requestRemoteByGetUser(url, user) {
-    let result = '';
-    $.ajax({
-        type: 'GET',
-        url: url,
-        data: '',
-        success: function (data) {
-           if(data.state==200){
-               result = data.msg;
-           }else{
-               result = 'Not Found';
-           }
-        },
-        error: function(XMLHttpRequest, textStatus, errorThrown) {
-            alert(XMLHttpRequest.status);
-            alert(XMLHttpRequest.readyState);
-            alert(textStatus);
-            result = 'Not Found';
-        },
-        complete: function(XMLHttpRequest, textStatus) {
-        }
-     });
     
-    return result;
+    async requestRemoteByGetUser(url, user) {
+        let result = '';
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: '',
+            success: function (data) {
+               if(data.state==200){
+                   result = data.msg;
+               }else{
+                   result = 'Not Found';
+               }
+            },
+            error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert(XMLHttpRequest.status);
+                alert(XMLHttpRequest.readyState);
+                alert(textStatus);
+                result = 'Not Found';
+            },
+            complete: function(XMLHttpRequest, textStatus) {
+            }
+         });
+        
+        return result;
+    }
 }
 
 module.exports.EchoBot = EchoBot;
