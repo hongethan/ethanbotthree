@@ -39,12 +39,13 @@ class EchoBot extends ActivityHandler {
         
         let path = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         console.log('--------------search Path:' + path);
-        await context.sendActivity(`You said '${ path }'`);
-        let msg = await requestRemoteByGetUser(path , 'ethanh');
+        await requestRemoteByGetUser(context, path , 'ethanh');
     }
     
-    async requestRemoteByGetUser(url, user) {
+    async requestRemoteByGetUser(context, url, user) {
+        await context.sendActivity(`You said '${ url }'`);
         let result = '';
+        await context.sendActivity(`Result '${ result }'`);
         $.ajax({
             type: 'GET',
             url: url,
@@ -66,7 +67,8 @@ class EchoBot extends ActivityHandler {
             }
          });
         
-        return result;
+        
+         await context.sendActivity(`Result '${ result }'`);
     }
 }
 
