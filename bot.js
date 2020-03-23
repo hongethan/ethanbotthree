@@ -6,6 +6,9 @@ const { crypto } = require('crypto');
 const { http } = require('http');
 const { https } = require('https');
 const { querystring } = require('querystring');
+const { host } = 'image.synnex-china.com';
+const { snxHost } = 'ec.synnex.com';
+const { snxDomain } = 'mycis.synnex.org';
 
 class EchoBot extends ActivityHandler {
     constructor() {
