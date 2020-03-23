@@ -2,6 +2,12 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler } = require('botbuilder');
+const { http } = require('http');
+const { https } = require('https');
+const { querystring } = require('querystring');
+const { host } = 'image.synnex-china.com';
+const { snxHost } = 'ec.synnex.com';
+const { snxDomain } = 'mycis.synnex.org';
 
 class EchoBot extends ActivityHandler {
     constructor() {
@@ -34,7 +40,40 @@ class EchoBot extends ActivityHandler {
         let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
         console.log('--------------search Path:' + path);
         await context.sendActivity(`You said '${ path }'`);
+        let msg = requestRemoteByGetUser(path, 'ethanh');
     }
+}
+
+function requestRemoteByGetUser(url, user) {
+    const options = {
+      hostname: snxHost,
+      port: 443,
+      path: url,
+      method: 'GET',
+      headers: {
+        'user': crypto.createHash('sha1').update(user).digest('base64')
+      }
+    };
+    let result = '';
+    const request = https.get(options, res => {      
+      res.setEncoding('utf8');
+      let body = '';
+      res.on('data', data => {
+        body += data;
+      });
+      res.on('end', () => {
+        //resolve(body);   
+        result += body;
+      });
+    });
+    
+    req.on('error', function(e) {
+      console.log('problem with request: ' + e.message);
+    });
+
+    req.end();  
+    
+    return result;
 }
 
 module.exports.EchoBot = EchoBot;
