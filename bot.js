@@ -46,7 +46,7 @@ class EchoBot extends ActivityHandler {
         let finalresult = '';
         await context.sendActivity(`Result '${finalresult}'`);
 
-        return requestRemoteByGetUser(path, user).then(function(result){
+        requestRemoteByGetUser(path, 'ethanh').then(function(result){
             let items=JSON.parse(result);
             console.log('--------------Result :' + items.toString());
             console.log('--------------Result is items PART :' + (items instanceof Array));		
@@ -76,11 +76,11 @@ class EchoBot extends ActivityHandler {
                 }
                 finalresult = resultvendor;
             }
-            await context.sendActivity(`Result '${finalresult}'`);
         }).catch(function(error){
             console.log(error);
-            await context.sendActivity('I am sorry, I cannot find any related information. ');
+            finalresult = 'I am sorry, I cannot find any related information. ';
         });	
+        await context.sendActivity(`Result '${finalresult}'`);
     }
 }
 
