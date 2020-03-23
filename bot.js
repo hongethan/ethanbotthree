@@ -37,10 +37,10 @@ class EchoBot extends ActivityHandler {
         let vend_name = context.activity.text;
         console.log('--------------search vend_name:' + vend_name);
         
-        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
+        let path = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         console.log('--------------search Path:' + path);
-        await context.sendActivity(`You said '${ snxHost + path }'`);
-        let msg = requestRemoteByGetUser(snxHost + path , 'ethanh');
+        await context.sendActivity(`You said '${ path }'`);
+        let msg = requestRemoteByGetUser(path , 'ethanh');
     }
 }
 
@@ -56,6 +56,14 @@ function requestRemoteByGetUser(url, user) {
            }else{
                result = 'Not Found';
            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(XMLHttpRequest.status);
+            alert(XMLHttpRequest.readyState);
+            alert(textStatus);
+            result = 'Not Found';
+        },
+        complete: function(XMLHttpRequest, textStatus) {
         }
      });
     
