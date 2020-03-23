@@ -54,7 +54,7 @@ class EchoBot extends ActivityHandler {
             path: url,
             method: 'GET'
         };
-        const request = https.get(options, res => {
+        const request = await https.get(options, res => {
             res.setEncoding('utf8');
             let body = '';
             res.on('data', data => {
@@ -68,6 +68,7 @@ class EchoBot extends ActivityHandler {
 
         request.on('error', function (e) {
             console.log('problem with request: ' + e.message);
+            result += e.message;
         });
 
         request.end();
