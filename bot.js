@@ -53,20 +53,30 @@ class EchoBot extends ActivityHandler {
 }
 
 async function requestRemoteByGetUser(url, user) {
-    var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
-    var xhr = new XMLHttpRequest();
     return new Promise(function (resolve, reject) {
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4) {
-                if (xhr.status >= 300) {
-                    reject("Error, status code = " + xhr.status)
-                } else {
-                    resolve(xhr.responseText);
-                }
-            }
-        }
-        xhr.open('get', url, true)
-        xhr.send();
+        var crypto = require('crypto');
+        const options = {
+          hostname: snxHost,
+          port: 443,
+          path: url,
+          method: 'GET',
+          headers: {
+            'user': crypto.createHash('sha1').update(user).digest('base64')
+          }
+        };
+        const request = https.get(options, res => {      
+          res.setEncoding('utf8');
+          let body = '';
+          res.on('data', data => {
+            body += data;
+          });
+          res.on('end', () => {
+            console.log("Pure Result is : "+body); 
+            resolve(body); 
+          });
+        });
+        
+        request.on('error', (err) => reject(err));   
     });
 }
 
