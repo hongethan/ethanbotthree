@@ -10,6 +10,7 @@ class EchoBot extends ActivityHandler {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         this.onMessage(async (context, next) => {
             //await context.sendActivity(`You said '${ queryVendorInfo(context) }'`);
+            console.log('enter onMessage');
             await this.queryVendorInfo(context);
 
             // By calling next() you ensure that the next BotHandler is run.
@@ -29,9 +30,11 @@ class EchoBot extends ActivityHandler {
     }
     
     async queryVendorInfo(context) {
+        console.log('enter queryVendorInfo');
         let vend_name_pp = context.activity.text;
+        console.log('enter vend_name_pp');
         
-        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
+        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         
         return requestRemoteByGetUser(path, user).then(function(result){
             let items=JSON.parse(result);
