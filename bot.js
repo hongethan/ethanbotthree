@@ -35,32 +35,36 @@ class EchoBot extends ActivityHandler {
         let vend_name = context.activity.text;
         console.log('--------------search vend_name:' + vend_name);
 
-        let url = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
+        const url = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
         console.log('--------------search Path:' + url);
         await context.sendActivity(`You said '${url}'`);
 
         let finalresult = '';
         await context.sendActivity(`Result '${finalresult}'`);
 
-        finalresult = await requestRemoteByGetUser(url, 'ethanh');
+        try {
+            finalresult = await requestRemoteByGetUser(url, 'ethanh');
+        } catch (err) {
+            finalresult = err;
+        }
 
         await context.sendActivity(`Result '${finalresult}'`);
     }
 }
 
 async function requestRemoteByGetUser(url, user) {
+    const xhr = require("xmlhttprequest").XMLHttpRequest;
     return new Promise(function (resolve, reject) {
-        const xhr = require("xmlhttprequest").XMLHttpRequest;
-        xhr.open('get', url, true);
-        xhr.responseType = 'document';
-        xhr.onload = function () {
-            var status = xhr.status;
-            if (status == 200) {
-                resolve(xhr.response.text);
-            } else {
-                reject(status);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (xhr.status >= 300) {
+                    reject("Error, status code = " + xhr.status)
+                } else {
+                    resolve(xhr.responseText);
+                }
             }
-        };
+        }
+        xhr.open('get', url, true)
         xhr.send();
     });
 }
