@@ -47,35 +47,6 @@ class EchoBot extends ActivityHandler {
         await context.sendActivity(`Result '${finalresult}'`);
 
         requestRemoteByGetUser(path, 'ethanh').then(function(result){
-            let items=JSON.parse(result);
-            console.log('--------------Result :' + items.toString());
-            console.log('--------------Result is items PART :' + (items instanceof Array));		
-                    
-            if(!items.hasOwnProperty('message')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else if(!items.message.hasOwnProperty('data')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else if(!items.message.data.hasOwnProperty('content')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else{
-    
-                var array = [];
-                if(!(items.message.data.content instanceof Array)){
-                    array.push(items.message.data.content);
-                }else{
-                    array = items.message.data.content;
-                }
-                
-                var resultvendor = 'Vendor Information: ' + '  \n\t\r';
-                for(var pos=0; pos < array.length; pos++){
-                    resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
-                }
-                
-                if(array.length < 1){
-                    resultvendor = resultvendor + 'Not Found';
-                }
-                finalresult = resultvendor;
-            }
         }).catch(function(error){
             console.log(error);
             finalresult = 'I am sorry, I cannot find any related information. ';
