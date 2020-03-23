@@ -59,12 +59,10 @@ class EchoBot extends ActivityHandler {
             let body = '';
             res.on('data', data => {
                 body += data;
-                await context.sendActivity(`Body '${body}'`);
             });
             res.on('end', () => {
                 //resolve(body);   
                 result += body;
-                await context.sendActivity(`Body '${body}'`);
             });
             await context.sendActivity(`Body '${body}'`);
         });
