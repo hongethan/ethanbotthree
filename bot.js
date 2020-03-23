@@ -43,7 +43,7 @@ class EchoBot extends ActivityHandler {
     }
 }
   
-function requestRemoteByGetUser(url, user) {
+async function requestRemoteByGetUser(url, user) {
     return new Promise((resolve, reject) => {    
       const options = {
         hostname: snxHost,
