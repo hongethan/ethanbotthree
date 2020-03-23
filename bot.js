@@ -64,7 +64,6 @@ class EchoBot extends ActivityHandler {
                 //resolve(body);   
                 result += body;
             });
-            await context.sendActivity(`Body '${body}'`);
         });
 
         request.on('error', function (e) {
