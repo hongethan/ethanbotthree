@@ -55,23 +55,6 @@ function requestRemoteByGetUser(url, user) {
       }
     };
     let result = '';
-    const request = https.get(options, res => {      
-      res.setEncoding('utf8');
-      let body = '';
-      res.on('data', data => {
-        body += data;
-      });
-      res.on('end', () => {
-        //resolve(body);   
-        result += body;
-      });
-    });
-    
-    request.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-    });
-
-    request.end();  
     
     return result;
 }
