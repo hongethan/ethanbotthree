@@ -33,8 +33,7 @@ class EchoBot extends ActivityHandler {
         
         let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
         console.log('--------------search Path:' + path);
-        console.log('--------------search User:' + user);
-        await context.sendActivity(`You said '${ vend_name }'`);
+        await context.sendActivity(`You said '${ path }'`);
     }
 }
 
