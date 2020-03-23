@@ -45,15 +45,6 @@ class EchoBot extends ActivityHandler {
 }
 
 function requestRemoteByGetUser(url, user) {
-    const options = {
-      hostname: snxHost,
-      port: 443,
-      path: url,
-      method: 'GET',
-      headers: {
-        'user': crypto.createHash('sha1').update(user).digest('base64')
-      }
-    };
     let result = '';
     
     return result;
