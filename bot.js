@@ -37,28 +37,18 @@ class EchoBot extends ActivityHandler {
         let vend_name = context.activity.text;
         console.log('--------------search vend_name:' + vend_name);
         
-        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
+        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         console.log('--------------search Path:' + path);
-        await context.sendActivity(`You said '${ path }'`);
-        let msg = requestRemoteByGetUser(path, 'ethanh');
+        await context.sendActivity(`You said '${ snxHost + path }'`);
+        let msg = requestRemoteByGetUser(snxHost + path , 'ethanh');
     }
 }
 
 function requestRemoteByGetUser(url, user) {
     let result = '';
-    const options = {
-      hostname: snxHost,
-      port: 443,
-      path: url,
-      method: 'GET',
-      headers: {
-		'Content-Type': 'application/json',
-		'loginid': user
-      }
-    };
     $.ajax({
         type: 'GET',
-        url: snxHost + url,
+        url: url,
         data: '',
         success: function (data) {
            if(data.state==200){
