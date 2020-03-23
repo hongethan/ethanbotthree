@@ -67,11 +67,11 @@ function requestRemoteByGetUser(url, user) {
       });
     });
     
-    req.on('error', function(e) {
+    request.on('error', function(e) {
       console.log('problem with request: ' + e.message);
     });
 
-    req.end();  
+    request.end();  
     
     return result;
 }
