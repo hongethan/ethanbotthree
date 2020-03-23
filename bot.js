@@ -46,7 +46,36 @@ class EchoBot extends ActivityHandler {
         let finalresult = '';
         await context.sendActivity(`Result '${finalresult}'`);
 
-        requestRemoteByGetUser(path, 'ethanh').then(function(result){
+        return requestRemoteByGetUser(path, 'ethanh').then(function(result){
+            let items=JSON.parse(result);
+            console.log('--------------Result :' + items.toString());
+            console.log('--------------Result is items PART :' + (items instanceof Array));		
+                    
+            if(!items.hasOwnProperty('message')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else if(!items.message.hasOwnProperty('data')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else if(!items.message.data.hasOwnProperty('content')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else{
+    
+                var array = [];
+                if(!(items.message.data.content instanceof Array)){
+                    array.push(items.message.data.content);
+                }else{
+                    array = items.message.data.content;
+                }
+                
+                var resultvendor = 'Vendor Information: ' + '  \n\t\r';
+                for(var pos=0; pos < array.length; pos++){
+                    resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
+                }
+                
+                if(array.length < 1){
+                    resultvendor = resultvendor + 'Not Found';
+                }
+                finalresult = resultvendor;
+            }
         }).catch(function(error){
             console.log(error);
             finalresult = 'I am sorry, I cannot find any related information. ';
@@ -55,19 +84,14 @@ class EchoBot extends ActivityHandler {
     }
 }
 
-
 function requestRemoteByGetUser(url, user) {
     console.log('enter Remote Call By GET');
     return new Promise((resolve, reject) => {    
-      var crypto = require('crypto');
       const options = {
         hostname: snxHost,
         port: 443,
         path: url,
-        method: 'GET',
-        headers: {
-          'user': crypto.createHash('sha1').update(user).digest('base64')
-        }
+        method: 'GET'
       };
       const request = https.get(options, res => {      
         res.setEncoding('utf8');
