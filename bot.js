@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-import { ActivityHandler } from 'botbuilder';
+const { ActivityHandler } = require('botbuilder');
 
 class EchoBot extends ActivityHandler {
     constructor() {
@@ -38,5 +38,4 @@ class EchoBot extends ActivityHandler {
     }
 }
 
-const _EchoBot = EchoBot;
-export { _EchoBot as EchoBot };
+module.exports.EchoBot = EchoBot;
