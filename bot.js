@@ -38,7 +38,7 @@ class EchoBot extends ActivityHandler {
         console.log('enter vend_name_pp');        
         
         let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
-        
+        await context.sendActivity('I will give you the result');
         return requestRemoteByGetUser(path, 'ethanh').then(function(result){
             let items=JSON.parse(result);
                     
