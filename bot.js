@@ -39,17 +39,17 @@ class EchoBot extends ActivityHandler {
         
         let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
         
-        return requestRemoteByGetUser(path, user).then(function(result){
+        return requestRemoteByGetUser(path, 'ethanh').then(function(result){
             let items=JSON.parse(result);
                     
             if(!items.hasOwnProperty('message')){
-                return 'I am sorry, I cannot find any related information. ';
+                await context.sendActivity( 'I am sorry, I cannot find any related information. ');
             }
             if(!items.message.hasOwnProperty('data')){
-                return 'I am sorry, I cannot find any related information. ';
+                await context.sendActivity( 'I am sorry, I cannot find any related information. ');
             }
             if(!items.message.data.hasOwnProperty('content')){
-                return 'I am sorry, I cannot find any related information. ';
+                await context.sendActivity( 'I am sorry, I cannot find any related information. ');
             }
 
             var array = [];
@@ -68,8 +68,9 @@ class EchoBot extends ActivityHandler {
                 resultvendor = resultvendor + 'Not Found';
             }
             return resultvendor;
+            await context.sendActivity(resultvendor);
         }).catch(function(error){
-            return 'I am sorry, I cannot find any related information. ';
+            await  context.sendActivity('I am sorry, I cannot find any related information. ');
         });	
     }
 }
