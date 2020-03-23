@@ -6,7 +6,7 @@ const { http } = require('http');
 const { https } = require('https');
 const { querystring } = require('querystring');
 const { host } = 'image.synnex-china.com';
-const { snxHost } = 'ec.synnex.com';
+const { snxHost } = 'https://ec.synnex.com';
 const { snxDomain } = 'mycis.synnex.org';
 
 class EchoBot extends ActivityHandler {
@@ -56,17 +56,18 @@ function requestRemoteByGetUser(url, user) {
 		'loginid': user
       }
     };
-    const request = https.get(options, res => {      
-      res.setEncoding('utf8');
-      let body = '';
-      res.on('data', data => {
-        body += data;
-      });
-      res.on('end', () => {
-        //resolve(body);   
-        result += body;
-      });
-    });
+    $.ajax({
+        type: 'GET',
+        url: snxHost + url,
+        data: '',
+        success: function (data) {
+           if(data.state==200){
+               result = data.msg;
+           }else{
+               result = 'Not Found';
+           }
+        }
+     });
     
     return result;
 }
