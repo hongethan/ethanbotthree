@@ -50,7 +50,7 @@ class EchoBot extends ActivityHandler {
 
 async function requestRemoteByGetUser(url, user) {
     return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
+        const xhr = require("xmlhttprequest").XMLHttpRequest;
         xhr.open('get', url, true);
         xhr.responseType = 'document';
         xhr.onload = function () {
