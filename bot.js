@@ -3,12 +3,8 @@
 
 const { ActivityHandler } = require('botbuilder');
 
-const http = require('http');
 const https = require('https');
-const querystring = require('querystring');
 
-const host = 'image.synnex-china.com';
-const snxDomain = 'mycis.synnex.org';
 const snxHost = 'https://ec.synnex.com';
 
 class EchoBot extends ActivityHandler {
@@ -86,26 +82,7 @@ class EchoBot extends ActivityHandler {
 
 function requestRemoteByGetUser(url, user) {
     console.log('enter Remote Call By GET');
-    return new Promise((resolve, reject) => {    
-      const options = {
-        hostname: snxHost,
-        port: 443,
-        path: url,
-        method: 'GET'
-      };
-      const request = https.get(options, res => {      
-        res.setEncoding('utf8');
-        let body = '';
-        res.on('data', data => {
-          body += data;
-        });
-        res.on('end', () => {
-          console.log("Pure Result is : "+body); 
-          resolve(body);   
-        });
-      });
-      
-      request.on('error', (err) => reject(err));    
+    return new Promise((resolve, reject) => {     
     });
   }
 
