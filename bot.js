@@ -35,7 +35,7 @@ class EchoBot extends ActivityHandler {
         let vend_name = context.activity.text;
         console.log('--------------search vend_name:' + vend_name);
 
-        let url = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
+        let url = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
         console.log('--------------search Path:' + url);
         await context.sendActivity(`You said '${url}'`);
 
@@ -48,7 +48,7 @@ class EchoBot extends ActivityHandler {
     }
 }
 
-function requestRemoteByGetUser(url, user) {
+async function requestRemoteByGetUser(url, user) {
     return new Promise(function (resolve, reject) {
         var xhr = new XMLHttpRequest();
         xhr.open('get', url, true);
