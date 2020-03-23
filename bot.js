@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
 
-const { ActivityHandler } = require('botbuilder');
-const { crypto } = require('crypto');
-const { http } = require('http');
-const { https } = require('https');
-const { querystring } = require('querystring');
+import { ActivityHandler } from 'botbuilder';
+import { crypto } from 'crypto';
+import { http } from 'http';
+import { https } from 'https';
+import { querystring } from 'querystring';
 const { host } = 'image.synnex-china.com';
 const { snxHost } = 'ec.synnex.com';
 const { snxDomain } = 'mycis.synnex.org';
@@ -56,22 +56,7 @@ async function requestRemoteByGetUser(url, user) {
         'user': crypto.createHash('sha1').update(user).digest('base64')
       }
     };
-    const request = https.get(options, res => {      
-      res.setEncoding('utf8');
-      let body = '';
-      res.on('data', data => {
-        body += data;
-      });
-      res.on('end', () => {
-        //resolve(body);    
-      });
-    });
-    
-    request.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-    });
-
-    request.end(); 
 }
 
-module.exports.EchoBot = EchoBot;
+const _EchoBot = EchoBot;
+export { _EchoBot as EchoBot };
