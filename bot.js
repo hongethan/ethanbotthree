@@ -42,48 +42,35 @@ class EchoBot extends ActivityHandler {
         let finalresult = '';
         await context.sendActivity(`Result '${finalresult}'`);
 
-        return requestRemoteByGetUser(path, 'ethanh').then(function(result){
-            let items=JSON.parse(result);
-            console.log('--------------Result :' + items.toString());
-            console.log('--------------Result is items PART :' + (items instanceof Array));		
-                    
-            if(!items.hasOwnProperty('message')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else if(!items.message.hasOwnProperty('data')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else if(!items.message.data.hasOwnProperty('content')){
-                finalresult = 'I am sorry, I cannot find any related information. ';
-            }else{
-    
-                var array = [];
-                if(!(items.message.data.content instanceof Array)){
-                    array.push(items.message.data.content);
-                }else{
-                    array = items.message.data.content;
-                }
-                
-                var resultvendor = 'Vendor Information: ' + '  \n\t\r';
-                for(var pos=0; pos < array.length; pos++){
-                    resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
-                }
-                
-                if(array.length < 1){
-                    resultvendor = resultvendor + 'Not Found';
-                }
-                finalresult = resultvendor;
-            }
-        }).catch(function(error){
-            console.log(error);
-            finalresult = 'I am sorry, I cannot find any related information. ';
-        });	
+        finalresult = await requestRemoteByGetUser(url, 'ethanh');
+        
         await context.sendActivity(`Result '${finalresult}'`);
     }
 }
 
 function requestRemoteByGetUser(url, user) {
     console.log('enter Remote Call By GET');
-    return new Promise((resolve, reject) => {     
+    return new Promise((resolve, reject) => {    
+      const options = {
+        hostname: snxHost,
+        port: 443,
+        path: url,
+        method: 'GET'
+      };
+      const request = https.get(options, res => {      
+        res.setEncoding('utf8');
+        let body = '';
+        res.on('data', data => {
+          body += data;
+        });
+        res.on('end', () => {
+          console.log("Pure Result is : "+body); 
+          resolve(body);   
+        });
+      });
+      
+      request.on('error', (err) => reject(err));    
     });
-  }
+}
 
 module.exports.EchoBot = EchoBot;
