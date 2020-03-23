@@ -5,7 +5,7 @@ const { ActivityHandler } = require('botbuilder');
 
 const https = require('https');
 
-const snxHost = 'https://ec.synnex.com';
+const snxHost = 'ec.synnex.com';
 
 class EchoBot extends ActivityHandler {
     constructor() {
