@@ -33,41 +33,7 @@ class EchoBot extends ActivityHandler {
         console.log('enter queryVendorInfo');
         let vend_name_pp = context.activity.text;
         console.log('enter vend_name_pp');
-        
-        let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
-        
-        return requestRemoteByGetUser(path, user).then(function(result){
-            let items=JSON.parse(result);
-                    
-            if(!items.hasOwnProperty('message')){
-                return 'I am sorry, I cannot find any related information. ';
-            }
-            if(!items.message.hasOwnProperty('data')){
-                return 'I am sorry, I cannot find any related information. ';
-            }
-            if(!items.message.data.hasOwnProperty('content')){
-                return 'I am sorry, I cannot find any related information. ';
-            }
-
-            var array = [];
-            if(!(items.message.data.content instanceof Array)){
-                array.push(items.message.data.content);
-            }else{
-                array = items.message.data.content;
-            }
-            
-            var resultvendor = 'Vendor Information: ' + '  \n\t\r';
-            for(var pos=0; pos < array.length; pos++){
-                resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
-            }
-            
-            if(array.length < 1){
-                resultvendor = resultvendor + 'Not Found';
-            }
-            return resultvendor;
-        }).catch(function(error){
-            return 'I am sorry, I cannot find any related information. ';
-        });	
+        await context.sendActivity('hahaha')
     }
 }
   
