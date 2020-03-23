@@ -19,7 +19,7 @@ class EchoBot extends ActivityHandler {
             const membersAdded = context.activity.membersAdded;
             for (let cnt = 0; cnt < membersAdded.length; ++cnt) {
                 if (membersAdded[cnt].id !== context.activity.recipient.id) {
-                    await context.sendActivity('Hello and welcome!');
+                    await context.sendActivity('Hello and welcome and!');
                 }
             }
             // By calling next() you ensure that the next BotHandler is run.
@@ -34,7 +34,7 @@ class EchoBot extends ActivityHandler {
         let path = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ vend_name + '\"}\"');
         console.log('--------------search Path:' + path);
         console.log('--------------search User:' + user);
-        await context.sendActivity(`You said '${ path }'`);
+        await context.sendActivity(`You said '${ vend_name }'`);
     }
 }
 
