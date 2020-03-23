@@ -43,33 +43,25 @@ class EchoBot extends ActivityHandler {
         await context.sendActivity(`Result '${finalresult}'`);
 
         finalresult = await requestRemoteByGetUser(url, 'ethanh');
-        
+
         await context.sendActivity(`Result '${finalresult}'`);
     }
 }
 
 function requestRemoteByGetUser(url, user) {
-    console.log('enter Remote Call By GET');
-    return new Promise((resolve, reject) => {    
-      const options = {
-        hostname: snxHost,
-        port: 443,
-        path: url,
-        method: 'GET'
-      };
-      const request = https.get(options, res => {      
-        res.setEncoding('utf8');
-        let body = '';
-        res.on('data', data => {
-          body += data;
-        });
-        res.on('end', () => {
-          console.log("Pure Result is : "+body); 
-          resolve(body);   
-        });
-      });
-      
-      request.on('error', (err) => reject(err));    
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', url, true);
+        xhr.responseType = 'document';
+        xhr.onload = function () {
+            var status = xhr.status;
+            if (status == 200) {
+                resolve(xhr.response.text);
+            } else {
+                reject(status);
+            }
+        };
+        xhr.send();
     });
 }
 
