@@ -3,10 +3,10 @@
 
 const { ActivityHandler } = require('botbuilder');
 const { http } = require('http');
-const { https } = require('https');
+
 const { querystring } = require('querystring');
 const { host } = 'image.synnex-china.com';
-const { snxHost } = 'https://ec.synnex.com';
+
 const { snxDomain } = 'mycis.synnex.org';
 
 class EchoBot extends ActivityHandler {
@@ -36,34 +36,43 @@ class EchoBot extends ActivityHandler {
     async queryVendorInfo(context) {
         let vend_name = context.activity.text;
         console.log('--------------search vend_name:' + vend_name);
-        
-        let path = encodeURI('https://ec.synnex.com/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"'+ 'abc' + '\"}\"');
-        console.log('--------------search Path:' + path);
-        await context.sendActivity(`You said '${ path }'`);
+
+        let url = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
+        console.log('--------------search Path:' + url);
+        await context.sendActivity(`You said '${url}'`);
+
         let result = '';
-        await context.sendActivity(`Result '${ result }'`);
-        $.ajax({
-            type: 'GET',
-            url: path,
-            data: '',
-            success: function (data) {
-               if(data.state==200){
-                   result = data.msg;
-               }else{
-                   result = 'Not Found';
-               }
-            },
-            error: function(XMLHttpRequest, textStatus, errorThrown) {
-                alert(XMLHttpRequest.status);
-                alert(XMLHttpRequest.readyState);
-                alert(textStatus);
-                result = 'Not Found';
-            },
-            complete: function(XMLHttpRequest, textStatus) {
-            }
-         });        
-        
-         await context.sendActivity(`Result '${ result }'`);
+        await context.sendActivity(`Result '${result}'`);
+
+        const https = require('https');
+        await context.sendActivity(`https '${https}'`);
+
+        const snxHost = 'https://ec.synnex.com';
+        const options = {
+            hostname: snxHost,
+            port: 443,
+            path: url,
+            method: 'GET'
+        };
+        const request = https.get(options, res => {
+            res.setEncoding('utf8');
+            let body = '';
+            res.on('data', data => {
+                body += data;
+            });
+            res.on('end', () => {
+                //resolve(body);   
+                result += body;
+            });
+        });
+
+        request.on('error', function (e) {
+            console.log('problem with request: ' + e.message);
+        });
+
+        request.end();
+
+        await context.sendActivity(`Result '${result}'`);
     }
 }
 
