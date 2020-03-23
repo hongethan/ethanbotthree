@@ -2,12 +2,14 @@
 // Licensed under the MIT License.
 
 const { ActivityHandler } = require('botbuilder');
-const { http } = require('http');
 
-const { querystring } = require('querystring');
-const { host } = 'image.synnex-china.com';
+const http = require('http');
+const https = require('https');
+const querystring = require('querystring');
 
-const { snxDomain } = 'mycis.synnex.org';
+const host = 'image.synnex-china.com';
+const snxDomain = 'mycis.synnex.org';
+const snxHost = 'https://ec.synnex.com';
 
 class EchoBot extends ActivityHandler {
     constructor() {
@@ -44,37 +46,38 @@ class EchoBot extends ActivityHandler {
         let result = '';
         await context.sendActivity(`Result '${result}'`);
 
-        const https = require('https');
-        await context.sendActivity(`https '${https}'`);
-
-        const snxHost = 'https://ec.synnex.com';
-        const options = {
-            hostname: snxHost,
-            port: 443,
-            path: url,
-            method: 'GET'
-        };
-        const request = https.get(options, res => {
-            res.setEncoding('utf8');
-            let body = '';
-            res.on('data', data => {
-                body += data;
-            });
-            res.on('end', () => {
-                //resolve(body);   
-                result += body;
-            });
-        });
-
-        request.on('error', function (e) {
-            console.log('problem with request: ' + e.message);
-            result += e.message;
-        });
-
-        request.end();
-
         await context.sendActivity(`Result '${result}'`);
     }
 }
+
+
+function requestRemoteByGetUser(url, user) {
+    console.log('enter Remote Call By GET');
+    return new Promise((resolve, reject) => {    
+      var crypto = require('crypto');
+      const options = {
+        hostname: snxHost,
+        port: 443,
+        path: url,
+        method: 'GET',
+        headers: {
+          'user': crypto.createHash('sha1').update(user).digest('base64')
+        }
+      };
+      const request = https.get(options, res => {      
+        res.setEncoding('utf8');
+        let body = '';
+        res.on('data', data => {
+          body += data;
+        });
+        res.on('end', () => {
+          console.log("Pure Result is : "+body); 
+          resolve(body);   
+        });
+      });
+      
+      request.on('error', (err) => reject(err));    
+    });
+  }
 
 module.exports.EchoBot = EchoBot;
