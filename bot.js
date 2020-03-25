@@ -36,10 +36,10 @@ class EchoBot extends ActivityHandler {
 
         const url = encodeURI('/gateway/p1-service?app_code=vendor-service&invoke_method=/api/vendor/vendorNamePattern/{patternName}/headers&paths={\"patternName\":\"' + 'abc' + '\"}\"');
         console.log('--------------search Path:' + url);
-        await context.sendActivity(`You said '${url}'`);
+        //await context.sendActivity(`You said '${url}'`);
 
         let finalresult = '';
-        await context.sendActivity(`Result '${finalresult}'`);
+        //await context.sendActivity(`Result '${finalresult}'`);
 
         try {
             let tmpresult = await requestRemoteByGetUser(url, 'ethanh');
@@ -72,10 +72,10 @@ class EchoBot extends ActivityHandler {
                 finalresult = resultvendor;
             }
         } catch (err) {
-            finalresult = err;
+            finalresult = 'I am sorry, I cannot find any related information. ';
         }
 
-        await context.sendActivity(`Result '${finalresult}'`);
+        await context.sendActivity(`'${finalresult}'`);
     }
 }
 
