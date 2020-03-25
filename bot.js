@@ -1,6 +1,5 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 // Licensed under the MIT License.
-
 const { ActivityHandler } = require('botbuilder');
 
 const https = require('https');
@@ -43,7 +42,35 @@ class EchoBot extends ActivityHandler {
         await context.sendActivity(`Result '${finalresult}'`);
 
         try {
-            finalresult = await requestRemoteByGetUser(url, 'ethanh');
+            let tmpresult = await requestRemoteByGetUser(url, 'ethanh');
+            let items=JSON.parse(tmpresult);
+            console.log('--------------Result :' + items.toString());
+                    
+            if(!items.hasOwnProperty('message')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else if(!items.message.hasOwnProperty('data')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else if(!items.message.data.hasOwnProperty('content')){
+                finalresult = 'I am sorry, I cannot find any related information. ';
+            }else{
+    
+                var array = [];
+                if(!(items.message.data.content instanceof Array)){
+                    array.push(items.message.data.content);
+                }else{
+                    array = items.message.data.content;
+                }
+                
+                var resultvendor = 'Vendor Information: ' + '  \n\t\r';
+                for(var pos=0; pos < array.length; pos++){
+                    resultvendor = resultvendor + array[pos].vendNo + '---' + array[pos].vendName + '  \n\t\r';
+                }
+                
+                if(array.length < 1){
+                    resultvendor = resultvendor + 'Not Found';
+                }
+                finalresult = resultvendor;
+            }
         } catch (err) {
             finalresult = err;
         }
